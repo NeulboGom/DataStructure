@@ -1,22 +1,60 @@
-# p115 응용예제 01
+# 단순 연결 리스트
 
-kakao_list = [('다현', 200), ('정연', 150), ('쯔위', 90), ('사나', 30), ('지효', 15)]
-
-
-def add_kkt(nm, ct):
-    tup_val = (nm, ct)
-    for i in range(len(kakao_list) - 1):
-        if int(ct) == int(kakao_list[0][1]):
-            kakao_list.insert(0, tup_val)
-            break
-        elif int(ct) >= int(kakao_list[i][1]):
-            kakao_list.insert(i, tup_val)
-            break
-
-    return kakao_list
+class Node():
+    def __init__(self):
+        self.data = None
+        self.link = None
 
 
-name = input("추가할 친구-->")
-count = input("카톡 횟수-->")
-add_kkt(name, count)
-print(kakao_list)
+node1 = Node()
+node1.data = "다현"
+
+
+node2 = Node()
+node2.data = "정연"
+node1.link = node2  # node1이 node2의 메모리 번지를 가리키고 연결
+
+node3 = Node()
+node3.data = "쯔위"
+node2.link = node3
+
+node4 = Node()
+node4.data = "사나"
+node3.link = node4
+
+node5 = Node()
+node5.data = "지효"
+node4.link = node5
+
+# print(node1.data, end=" ")
+# print(node1.link.data, end=" ")
+# print(node1.link.link.data, end=" ")
+# print(node1.link.link.link.data, end=" ")
+# print(node1.link.link.link.link.data, end=" ")
+
+current = node1
+print(current.data, end=" ")
+while current.link is not None:     #link연결이 없으면 None 있으면 while문 실행
+    current = current.link
+    print(current.data, end=" ")
+
+print(" ")
+print("="*60)
+
+# 노드 삽입
+newNode = Node()
+newNode.data = "재남"
+newNode.link = node2.link       # 재남이 쯔위(node2.link 정연의 화살표)를 가리킴
+node2.link = newNode            # node2.link 정연의 화살표가 재남을 가리킴
+
+current = node1
+print(current.data, end=" ")
+while current.link is not None:
+    current = current.link
+    print(current.data, end=" ")
+
+print(" ")
+print("="*60)
+
+
+
