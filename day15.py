@@ -1,28 +1,49 @@
-def insert_data(idx, pokemon):
-    '''
-    선형 리스트 idx 위치의 원소 삽입
-    :param idx: 순번
-    :param pokemon: 포켓몬 종류
-    :return: final list
-    '''
-    if idx < 0 or idx > len(pokemons):
-        print("Out of range!")
-        return
+## 함수 선언 부분 ##
+def print_poly(p_x):
+    """
+    다항식 출력
+    :param p_x: 계수를 갖고 있는 list
+    :return: 다항식 String
+    """
+    term = len(p_x) - 1  # 최고차항 숫자 = 배열길이-1
+    poly_str = "P(x) = "
 
-    pokemons.append(None)  # 빈칸 추가
-    # kLen = len(pokemons)  # 배열의 현재 크기
+    for i in range(len(px)):
+        coef = p_x[i]  # 계수
 
-    for i in range(len(pokemons) - 1, idx, -1):
-        pokemons[i] = pokemons[i - 1]
-        pokemons[i - 1] = None
+        if i > 0 and coef > 0:
+            poly_str += "+"
+        elif coef == 0:
+            term += -1
+            continue
+        poly_str += f"{coef}x^{term}"
+        term -= 1
 
-    pokemons[idx] = pokemon  # 지정한 위치에 친구 추가
+    return poly_str
 
 
+def cal_poly(x_value, p_x):
+    """
+    다항식 계산
+    :param x_value: x값
+    :param p_x: 다항식의 계수 list
+    :return: 다항식 계산의 result
+    """
+    return_val = 0
+    term = len(p_x) - 1  # 최고차항 숫자 = 배열길이-1
+
+    for i in range(len(px)):
+        co_ef = p_x[i]  # 계수
+        return_val += co_ef * x_value ** term
+        term -= 1
+
+    return return_val
+
+
+px = [7, -4, 0, 5]  # = 7x^3 -4x^2 +0x^1 +5x^0
 if __name__ == "__main__":
-    pokemons = ["피카츄", "라이츄", "꼬부기", "버터플", "야도란"]
-    print(pokemons)
-    insert_data(2, '파이리')
-    print(pokemons)
-    insert_data(6, "피죤투")
-    print(pokemons)
+    pStr = print_poly(px)
+    print(pStr)
+    x_val = int(input("X 값-->"))
+    pxValue = cal_poly(x_val, px)
+    print(pxValue)
