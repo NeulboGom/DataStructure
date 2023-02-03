@@ -1,60 +1,52 @@
-# 단순 연결 리스트
-
+## 클래스와 함수 선언 부분 ##
 class Node():
     def __init__(self):
         self.data = None
         self.link = None
 
 
-node1 = Node()
-node1.data = "다현"
+def printNodes(start):
+    """
+    첫 번째 node가 current를 가리키고, currnet.link가 존재하면
+    계속해서 node를 print
+    만약 current.link가 없으면
+    끝. 그냥 return
+    :param start: 1st node(head)
+    :return:
+    """
+    current = start
+    if current is None:
+        return
+    print(current.data, end=' ')
+    while current.link is not None:
+        current = current.link
+        print(current.data, end=' ')
+    print()
 
 
-node2 = Node()
-node2.data = "정연"
-node1.link = node2  # node1이 node2의 메모리 번지를 가리키고 연결
+## 전역 변수 선언 부분 ##
+memory = []
+head, current, pre = None, None, None
+dataArray = ["피카츄", "라이츄", "파이리", "꼬부기", "버터플"]
 
-node3 = Node()
-node3.data = "쯔위"
-node2.link = node3
+## 메인 코드 부분 ##
+if __name__ == "__main__":
 
-node4 = Node()
-node4.data = "사나"
-node3.link = node4
+    node = Node()  # 첫 번째 노드
+    node.data = dataArray[0]
+    head = node
+    memory.append(node)
 
-node5 = Node()
-node5.data = "지효"
-node4.link = node5
+    for data in dataArray[1:]:  # 두 번째 이후 노드
+        pre = node          # 이전 node를 pre에 백업..
+        node = Node()
+        node.data = data
+        pre.link = node
+        memory.append(node)
 
-# print(node1.data, end=" ")
-# print(node1.link.data, end=" ")
-# print(node1.link.link.data, end=" ")
-# print(node1.link.link.link.data, end=" ")
-# print(node1.link.link.link.link.data, end=" ")
-
-current = node1
-print(current.data, end=" ")
-while current.link is not None:     #link연결이 없으면 None 있으면 while문 실행
-    current = current.link
-    print(current.data, end=" ")
-
-print(" ")
-print("="*60)
-
-# 노드 삽입
-newNode = Node()
-newNode.data = "재남"
-newNode.link = node2.link       # 재남이 쯔위(node2.link 정연의 화살표)를 가리킴
-node2.link = newNode            # node2.link 정연의 화살표가 재남을 가리킴
-
-current = node1
-print(current.data, end=" ")
-while current.link is not None:
-    current = current.link
-    print(current.data, end=" ")
-
-print(" ")
-print("="*60)
-
+    printNodes(head)
+    print(memory)       # 각 node의 메모리 번지수 -> 객체라는 점을 알 수 있음 / memory 리스트 안에 있는 객체임
+    print(node.data)
+    print(pre.data)
 
 
