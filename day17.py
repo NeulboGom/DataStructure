@@ -65,7 +65,7 @@ def en_queue(data):
     rear += 1
     queue[rear] = data
 
-
+'''
 # 큐 추출 함수
 def de_queue(data):
     global SIZE, queue, front, rear
@@ -76,7 +76,7 @@ def de_queue(data):
     data = queue[front]
     queue[front] = None
     return data
-
+'''
 
 print("=" * 60)
 
@@ -100,11 +100,38 @@ def isqueue_full():
         rear -= 1
         return False
 
+#
+# SIZE = 5
+# queue = [None, None, '문별', '휘인', '선미']
+# front = 1
+# rear = 4
+
+# print(isqueue_full())
+# print(queue)
+print("=" * 60)
+
+def de_queue(data):
+    global SIZE, queue, front, rear
+    if isqueue_empty():
+        print("큐가 비었습니다.")
+        return
+    front += 1
+    data = queue[front]
+    queue[front] = None
+    if queue[front] is not None:
+        for i in range(front+1, SIZE):
+            queue[i-1] = queue[i]
+            queue[i] = None
+        front -= 1
+        rear -= 1
+        return
+    return data
+
 
 SIZE = 5
-queue = [None, None, '문별', '휘인', '선미']
-front = 1
+queue = ['화사', '솔라', '문별', '휘인', '선미']
+front = -1
 rear = 4
 
-print(isqueue_full())
-print(queue)
+print(de_queue("화사"))
+print(queue)                #de_queue를 개선해보려는 노력데스네
