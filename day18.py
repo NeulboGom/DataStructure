@@ -1,6 +1,9 @@
 # Chapter9 Graph
+from collections import deque
 
-# Self Study 9-2 p336
+
+# BFS 너비 우선 탐색
+# collection, deque를 이용
 
 class Graph():  # 클래스 먼저 만들기
     def __init__(self, size):
@@ -11,30 +14,24 @@ class Graph():  # 클래스 먼저 만들기
 
 ## 전역 변수 선언 부분 ##
 
-G1 = None
-stack = []  # append() as push
+G2 = None
+queue = deque([])       # deque as queue
 visited_vertex = []
 
 ## 메인 코드 부분 ##
 
-G1 = Graph(9)
-G1.graph[0][1] = G1.graph[0][2] = G1.graph[0][4] = 1
-G1.graph[1][0] = G1.graph[1][2] = G1.graph[1][3] = 1
-G1.graph[2][0] = G1.graph[2][1] = G1.graph[2][3] = G1.graph[2][5] = G1.graph[2][4] = 1
-G1.graph[3][1] = G1.graph[3][2] = 1
-G1.graph[4][0] = G1.graph[4][2] = G1.graph[4][6] = G1.graph[4][7] = 1
-G1.graph[5][2] = 1
-G1.graph[6][4] = G1.graph[6][8] = 1
-G1.graph[7][4] = G1.graph[7][8] = 1
-G1.graph[8][7] = G1.graph[8][6] = 1
+G2 = Graph(4)
+G2.graph[0][2] = G2.graph[0][3] = G2.graph[1][2] = 1
+G2.graph[2][0] = G2.graph[2][1] = G2.graph[2][3] = 1
+G2.graph[3][0] = G2.graph[3][2] = 1
 
 current = 0  # 시작 정점(A)
-stack.append(current)
+queue.append(current)   #en_queue
 visited_vertex.append(current)
 
 
 def append_ver(g_var):
-    while len(stack) != 0:
+    while len(queue) != 0:
         global current
         ne_xt = None
         for vertex in range(g_var.SIZE):
@@ -47,10 +44,11 @@ def append_ver(g_var):
 
         if ne_xt is not None:  # 다음에 연결할 next가 있다면 stack에 하나씩 넣는 과정
             current = ne_xt
-            stack.append(current)
+            queue.append(current)
             visited_vertex.append(current)
         else:  # 다음에 방문할 vertex가 없을 경우 stack에서 하나씩 빼는 과정
-            current = stack.pop(0)  # 오버헤드 발생 // 큐처럼 first in first out
+            #current = queue.pop(0)  # 오버헤드 발생 // 큐처럼 first in first out // O(n)
+            current = queue.popleft()   # O(1)
 
 
 def print_graph(g):
@@ -67,13 +65,13 @@ def print_graph(g):
 
 
 print("## G1 무방향 그래프 ##")
-for hang in range(G1.SIZE):
-    for yeol in range(G1.SIZE):
-        print(G1.graph[hang][yeol], end=' ')
+for hang in range(G2.SIZE):
+    for yeol in range(G2.SIZE):
+        print(G2.graph[hang][yeol], end=' ')
     print()
 
-append_ver(G1)
-print(stack)
+append_ver(G2)
+print(queue)
 print(visited_vertex)
 print("방문 순서 -->", end=' ')
 for i in visited_vertex:
@@ -86,5 +84,6 @@ for i in visited_vertex:
 print()
 
 print("="*70)
-print_graph(G1)
+print_graph(G2)
+
 
