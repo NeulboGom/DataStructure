@@ -1,9 +1,14 @@
 # Chapter9 Graph
-from collections import deque
 
+# 그래프의 응용 - 최소 비용으로 자전거 도로 연결
+# 가중치 그래프에서 신장트리 중 합계가 최소인 것
+# 구현하는 방법은 프림(Prim) 알고리즘, 크루스컬(Kruskal) 알고리즘이 있음
+# 일단 가중치를 오름차순으로 정렬
+# 만약 Cycle이 만들어지면 제거
+# 간선은 연결 됐다 아니다 뜻으로 '1'과 '0'을 입력했고
+# 가중치는 '1'과 '0' 대신 가중치 숫자를 입력
 
-# BFS 너비 우선 탐색
-# collection, deque를 이용
+from operator import itemgetter
 
 class Graph():  # 클래스 먼저 만들기
     def __init__(self, size):
@@ -12,26 +17,57 @@ class Graph():  # 클래스 먼저 만들기
         # 하나의 행 [0,0,0,0]   #[0,0,0,0]이 4개가 됨
 
 
-## 전역 변수 선언 부분 ##
+G1 = None
+place_array = ["춘천", '서울', '속초', '대전', '광주', '부산']
+춘천, 서울, 속초, 대전, 광주, 부산 = 0, 1, 2, 3, 4, 5
 
-G2 = None
-queue = deque([])       # deque as queue
+G1 = Graph(6)
+G1.graph[춘천][서울] = 10
+G1.graph[춘천][속초] = 15
+
+G1.graph[서울][춘천] = 10
+G1.graph[서울][속초] = 40
+G1.graph[서울][대전] = 11
+G1.graph[서울][광주] = 50
+
+G1.graph[속초][춘천] = 15
+G1.graph[속초][서울] = 40
+G1.graph[속초][대전] = 12
+
+G1.graph[대전][서울] = 11
+G1.graph[대전][속초] = 12
+G1.graph[대전][광주] = 20
+G1.graph[대전][부산] = 30
+
+G1.graph[광주][서울] = 50
+G1.graph[광주][대전] = 20
+G1.graph[광주][부산] = 25
+
+G1.graph[부산][대전] = 30
+G1.graph[부산][광주] = 25
+
 visited_vertex = []
-
-## 메인 코드 부분 ##
-
-G2 = Graph(4)
-G2.graph[0][2] = G2.graph[0][3] = G2.graph[1][2] = 1
-G2.graph[2][0] = G2.graph[2][1] = G2.graph[2][3] = 1
-G2.graph[3][0] = G2.graph[3][2] = 1
-
+stack= []
 current = 0  # 시작 정점(A)
-queue.append(current)   #en_queue
+stack.append(current)   #en_queue
 visited_vertex.append(current)
 
 
+def print_graph(g):
+    print(' ', end=' ')
+    for v in range(g.SIZE):
+        print(visited_vertex[v], end=' ')
+    print()
+    for row in range(g.SIZE):
+        print(visited_vertex[row], end=' ')
+        for col in range(g.SIZE):
+            print(g.graph[row][col], end=' ')
+        print()
+    print()
+
+
 def append_ver(g_var):
-    while len(queue) != 0:
+    while len(stack) != 0:
         global current
         ne_xt = None
         for vertex in range(g_var.SIZE):
@@ -44,46 +80,56 @@ def append_ver(g_var):
 
         if ne_xt is not None:  # 다음에 연결할 next가 있다면 stack에 하나씩 넣는 과정
             current = ne_xt
-            queue.append(current)
+            stack.append(current)
             visited_vertex.append(current)
         else:  # 다음에 방문할 vertex가 없을 경우 stack에서 하나씩 빼는 과정
-            #current = queue.pop(0)  # 오버헤드 발생 // 큐처럼 first in first out // O(n)
-            current = queue.popleft()   # O(1)
+            current = stack.pop()  # 오버헤드 발생 // 큐처럼 first in first out // O(n)
+            # current = queue.popleft()   # O(1)
 
 
-def print_graph(g):
-    print(' ', end=' ')
-    for v in range(g.SIZE):
-        print(chr(visited_vertex[v]+65), end=' ')
-    print()
-    for row in range(g.SIZE):
-        print(chr(visited_vertex[row]+65), end=' ')
-        for col in range(g.SIZE):
-            print(g.graph[row][col], end=' ')
-        print()
-    print()
+def find_vertex(g, ver):
+    global stack, visited_vertex, current
+    append_ver(g)
+    if ver in visited_vertex:
+        return True
+    else:
+        return False
 
 
-print("## G1 무방향 그래프 ##")
-for hang in range(G2.SIZE):
-    for yeol in range(G2.SIZE):
-        print(G2.graph[hang][yeol], end=' ')
-    print()
+edge_array = []
+for i in range(G1.SIZE):
+    for k in range(G1.SIZE):
+        if G1.graph[i][k] != 0:
+            edge_array.append([G1.graph[i][k], i, k])
 
-append_ver(G2)
-print(queue)
-print(visited_vertex)
-print("방문 순서 -->", end=' ')
-for i in visited_vertex:
-    print(i, end=' ')
-print()
+print(edge_array)
 
-print("방문 순서 -->", end=' ')
-for i in visited_vertex:
-    print(chr(ord("A") + i), end=' ')
-print()
+edge_array = sorted(edge_array, key=itemgetter(0), reverse=True)
 
-print("="*70)
-print_graph(G2)
+new_array = []
+for i in range(0,len(edge_array), 2):
+    new_array.append(edge_array[i])
 
 
+idx = 0
+while len(new_array) > G1.SIZE - 1:
+    start = new_array[idx][1]
+    end = new_array[idx][2]
+    save_cost = new_array[idx][0]
+
+    G1.graph[start][end] = 0
+    G1.graph[end][start] = 0
+
+    start_yn = find_vertex(G1, start)
+    end_yn = find_vertex(G1, end)
+
+    if start_yn and end_yn:
+        del new_array[idx]
+    else:
+        G1.graph[start][end] = save_cost
+        G1.graph[end][start] = save_cost
+        idx += 1
+
+
+print("## 최소 비용의 자전거 연결도 ##")
+print_graph(G1)
