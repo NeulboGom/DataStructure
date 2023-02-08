@@ -28,8 +28,6 @@ G1.graph[6][4] = G1.graph[6][8] = 1
 G1.graph[7][4] = G1.graph[7][8] = 1
 G1.graph[8][7] = G1.graph[8][6] = 1
 
-
-
 current = 0  # 시작 정점(A)
 stack.append(current)
 visited_vertex.append(current)
@@ -51,17 +49,17 @@ def append_ver(g_var):
             current = ne_xt
             stack.append(current)
             visited_vertex.append(current)
-        else:                  # 다음에 방문할 vertex가 없을 경우 stack에서 하나씩 빼는 과정
-            current = stack.pop()   # A까지 사라지지 않는 한, len(stack)이 0이 아니기 때문에 while문 반복
+        else:  # 다음에 방문할 vertex가 없을 경우 stack에서 하나씩 빼는 과정
+            current = stack.pop(0)  # 오버헤드 발생 // 큐처럼 first in first out
 
 
 def print_graph(g):
     print(' ', end=' ')
     for v in range(g.SIZE):
-        print(visited_vertex[v], end=' ')
+        print(chr(visited_vertex[v]+65), end=' ')
     print()
     for row in range(g.SIZE):
-        print(visited_vertex[row], end=' ')
+        print(chr(visited_vertex[row]+65), end=' ')
         for col in range(g.SIZE):
             print(g.graph[row][col], end=' ')
         print()
@@ -74,12 +72,19 @@ for hang in range(G1.SIZE):
         print(G1.graph[hang][yeol], end=' ')
     print()
 
-
 append_ver(G1)
 print(stack)
 print(visited_vertex)
 print("방문 순서 -->", end=' ')
 for i in visited_vertex:
-    print(chr(ord('A') + i), end=' ')
+    print(i, end=' ')
+print()
 
+print("방문 순서 -->", end=' ')
+for i in visited_vertex:
+    print(chr(ord("A") + i), end=' ')
+print()
+
+print("="*70)
+print_graph(G1)
 
