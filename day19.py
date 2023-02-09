@@ -1,30 +1,66 @@
 # Chapter10 재귀함수
+import tkinter as tk
 
-# 재귀함수의 응용
-# 회문 판단하기
-# palindrome: 인도인, 별똥별, 스위스, 역삼역 우영우
+## GUI와 재귀를 이용한 예시
 
-
-## 클래스 변수와 함수 선언 부분 ##
-def palindrome(string):
-    if len(string) <= 1:  # 문자열의 길이가 1개 일 때, 이건 회문이 맞음
-        return True
-
-    if string[0] != string[-1]:  # 문자열의 첫 문자와 끝 문자가 다르면 / 회문 아님
-        return False
-
-    return palindrome(string[1:len(string) - 1])    # 2번째부터 뒤에서 두 번째 문자열까지 슬라이스 하고 재귀로 넣음
-                                                    # 계속 잘라가면서 반복하면서 회문 맞는지 판단
+memos = [None for _ in range(100)]
+memos[0], memos[1] = 0, 1
 
 
-## 전역 변수 선언 부분 ##
-palst_list = ["reaver", 'kayak']
+# Memoization-Recursion을 사용하여 피보나치 수열을 구하는 함수
+def fibo_memo_recu(n):
+    global memos
+    """
+    Memoization(DP)을 사용한 피보나치 수열
+    :param n:
+    :return:
+    """
+    if n <= 1:
+        return memos[n]
 
-## 메인 코드 부분 ##
-for i in palst_list:
-    print(i, end='-->')
-    i = i.lower().replace(' ', '')  # 일단 lower로 모든 문자를 소문자로 / replace로 빈칸을 ''로 없앰
-    if palindrome(i):  #
-        print('O')
+    if memos[n] is not None:  # 저역 메모리 memos에 이전에 계산한 결과 값이 존재하면, 재귀함수를 안 하겠다.
+        return memos[n]
+
+    memos[n] = fibo_memo_recu(n - 2) + fibo_memo_recu(n - 1)  # 처음 방문하는 n
+    return memos[n]
+
+
+# 팩토리얼을 구하는 함수
+def fact_recu(n):
+    if n == 1:
+        return 1
     else:
-        print("X")
+        return n * fact_recu(n - 1)
+
+
+# 입력받는 함수
+def fact_input():
+    lbl_results.config(text=f"팩토리얼 계산 출력 결과: {fact_recu(int(int(en_num_input.get())))}")
+    # input_number = int(en_num_input.get())  # ~.get()은
+
+
+# 입력받는 함수
+def fibo_input():
+    lbl_results.config(text=f"피보나치 계산 출력 결과: {fibo_memo_recu(int(en_num_input.get()))}")
+    # input_number = int(en_num_input.get())
+
+
+win = tk.Tk()  # 윈도우 생성
+win.title("Calculator")  # 피보나치, 팩토리얼 계산기
+win.geometry("250x100+800+400")  # 가로, 세로 너비 조정  //win.geometry("가로x세로 + x좌표 + y좌표")
+
+en_num_input = tk.Entry()  # 텍스트 입력 상자
+lbl_results = tk.Label(text="계산 출력 결과: ")  # 레이블, 계산 결과 출력용
+btn_fact = tk.Button(text="팩토리얼", command=fact_input)  # 팩토리얼 버튼, 이벤트 발생
+btn_fibo = tk.Button(text="피보나치", command=fibo_input)  # 피보나치 버튼, 이벤트 발생
+# 위에 두 개 처럼 command만 하면 함수가 return을 하긴 하는데 오류 발생됨
+# 해서 입력받는 함수를 만들고 상황에 따라서
+
+# 레이아웃(grid 또는 place도 사용 가능)
+en_num_input.pack()
+lbl_results.pack()
+btn_fact.pack(fill='x')
+btn_fibo.pack(fill='x')
+
+# 창 생성
+win.mainloop()
