@@ -1,6 +1,7 @@
 # Chapter12 Sort Advanced
 import random
 
+'''
 # Quick Sort 퀵 정렬 p433
 # 최선: nlog(n) (variation is n) / 평균: nlog(n) / 최악: n**2 / 메모리: 뭐라는겨
 # 안정: 일반적인 제자리 정렬은 안정적이지 못하다. 안정판이 존재한다. / 방식: 파티셔닝
@@ -105,6 +106,9 @@ def quick_sort_wmid(ls):
     return quick_sort_wmid(left_ls) + [pivot] + quick_sort_wmid(right_ls)  # 재귀함수로 요소 하나만 남을 때까지 계속 나누고
     # 결국 정렬해서 중간에 중복값 리스트를 두고 다시 합침
 
+'''
+count = 0
+
 
 # 퀵 정렬 일반 구현 / 리스트 하나로
 def quick_sort_advaced(ls, start, end):
@@ -112,10 +116,8 @@ def quick_sort_advaced(ls, start, end):
     count += 1
     if end <= start:
         return
-
     low = start
     high = end
-
     pivot = ls[(low + high) // 2]
     while low <= high:
         while ls[low] < pivot:
@@ -125,11 +127,9 @@ def quick_sort_advaced(ls, start, end):
         if low <= high:
             ls[low], ls[high] = ls[high], ls[low]
             low, high = low + 1, high - 1
-
     mid = low
-
     quick_sort_advaced(ls, start, mid - 1)
-    quick_sort_advaced(ls, end, mid)
+    quick_sort_advaced(ls, mid, end)
 
 
 def quick_sort_advanced_out(ls):
@@ -142,4 +142,4 @@ print(f"정렬 전 --> {check3}")
 quick_sort_advanced_out(check3)
 print(f"정렬 후 --> {check3}")
 print(f"## {count}회로 정렬 완료")
-print("="*70)
+print("=" * 70)
