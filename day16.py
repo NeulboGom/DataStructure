@@ -9,10 +9,10 @@ class Node():
 
 def print_node(start):
     current = start
-    if current == None:
+    if current is None:
         return
     print(current.data, end=' ')
-    while current.link != None:
+    while current.link is not None:
         current = current.link
         print(current.data, end=' ')
     print()
@@ -80,6 +80,7 @@ def find_node(find_data):
             return current
 
     return Node("nameless")
+
 
 
 ## 전역 변수 선언 부분 ##
